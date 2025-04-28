@@ -19,7 +19,6 @@ Built for scalability, speed, and simplicity — perfect for production-ready ba
    ```bash
    cd SupaExpress
     ```
-   ```
 3. Install dependencies:
    ```bash
     npm install
