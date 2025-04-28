@@ -1,25 +1,15 @@
-import { check } from 'express-validator';
+import { z } from 'zod';
 
-export const validateEmail =
-  check('email')
-    .notEmpty()
-    .withMessage('Email cannot be empty.')
-    .isEmail()
-    .normalizeEmail()
-    .withMessage('Bad email format.');
-
-export const validatePassword =
-  check('password')
-    .isString()
-    .notEmpty()
-    .withMessage('Password cannot be empty.')
-    .isLength({ min: 8, max: 32 })
-    .withMessage('Password must be at least 8 characters long and at most 32 characters long.')
-    .matches(/[A-Z]/)
-    .withMessage('Password must contain at least one uppercase letter.')
-    .matches(/[a-z]/)
-    .withMessage('Password must contain at least one lowercase letter.')
-    .matches(/[0-9]/)
-    .withMessage('Password must contain at least one digit.')
-    .matches(/[\W_]/)
-    .withMessage('Password must contain at least one special character.');
+export const authSchema = z.object({
+  email: z.string({ required_error: 'Email is required.' })
+    .nonempty('Email cannot be empty.')
+    .email('Bad email format.'),
+  password: z.string({ required_error: 'Password is required.' })
+    .nonempty('Password cannot be empty.')
+    .min(8, 'Password must be at least 8 characters long.')
+    .max(32, 'Password must be at most 32 characters long.')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter.')
+    .regex(/[a-z]/, 'Password must contain at least one lowercase letter.')
+    .regex(/[0-9]/, 'Password must contain at least one digit.')
+    .regex(/[\W_]/, 'Password must contain at least one special character.'),
+});
