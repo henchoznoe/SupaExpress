@@ -1,18 +1,19 @@
 import { NextFunction, Request, Response } from 'express';
-import { validationResult } from 'express-validator';
+import { ZodTypeAny } from 'zod';
 import { sendError } from './httpResponses';
 
 /**
- * Middleware to validate request fields using express-validator.
- * If validation fails, it sends an error response with the first validation error message.
- * If validation passes, it calls the next middleware in the stack.
+ * Middleware to validate request body using Zod schema.
  *
- * @param {Request} req - The request object.
- * @param {Response} res - The response object.
- * @param {NextFunction} next - The next middleware function.
+ * @param {ZodTypeAny} schema - The Zod schema to validate against.
  */
-export const fieldsValidation = (req: Request, res: Response, next: NextFunction) => {
-  const errors = validationResult(req);
-  if ( !errors.isEmpty() ) return sendError(res, 400, errors.array()[0].msg);
-  next();
+export const validateFields = (schema: ZodTypeAny) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const result = schema.safeParse(req.body);
+    if ( !result.success ) {
+      const errorMessage = result.error.errors[0]?.message || 'Invalid input';
+      return sendError(res, 400, errorMessage);
+    }
+    next();
+  };
 };
