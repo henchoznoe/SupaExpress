@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { supabase } from '../config/supabase';
 import { sendError, sendSuccess } from '../middlewares/httpResponses';
+import { supabaseAdmin } from '../config/supabaseAdmin';
 
 /**
  * Controller to handle user registration.
@@ -15,15 +16,21 @@ import { sendError, sendSuccess } from '../middlewares/httpResponses';
 export const register = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
-    const { data, error } = await supabase.auth.signUp({ email, password, });
+    const { data: user, error } = await supabase.auth.signUp({ email, password });
     if ( error ) return sendError(res, 400, error.message);
+    const { error: adminError } = await supabaseAdmin.auth.admin.updateUserById(<string>user.user?.id, {
+      app_metadata: {
+        role: 'user',
+      },
+    });
+    if ( adminError ) return sendError(res, 500, adminError.message);
     return sendSuccess(res, 200, 'User registered successfully', {
       user: {
-        id: data.user?.id,
-        email: data.user?.email,
+        id: user.user?.id,
+        email: user.user?.email,
       },
       session: {
-        access_token: data.session?.access_token,
+        access_token: user.session?.access_token,
       }
     });
   } catch ( error ) {
@@ -44,7 +51,7 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password, });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if ( error ) return sendError(res, 401, error.message);
     return sendSuccess(res, 200, 'Login successful', {
       user: {
