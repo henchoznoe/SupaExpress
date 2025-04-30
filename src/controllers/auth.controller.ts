@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
-import { supabase } from '../config/supabase';
+import { supabase, supabaseAdmin } from '../config/supabase';
 import { sendError, sendSuccess } from '../middlewares/httpResponses';
-import { supabaseAdmin } from '../config/supabaseAdmin';
 
 /**
  * Controller to handle user registration.

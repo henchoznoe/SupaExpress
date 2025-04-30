@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Roles } from '../types/role';
 import { sendError, sendSuccess } from '../middlewares/httpResponses';
-import { supabaseAdmin } from '../config/supabaseAdmin';
+import { supabaseAdmin } from '../config/supabase';
 
 export const setUserRole = async (req: Request, res: Response) => {
   const { userId, role } = req.body;

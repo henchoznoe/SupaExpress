@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { sendError } from './httpResponses';
-import { supabaseAdmin } from '../config/supabaseAdmin';
+import { supabaseAdmin } from '../config/supabase';
 
 /**
  * Middleware to check user role.
