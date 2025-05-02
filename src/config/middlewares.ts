@@ -14,13 +14,15 @@ export const setupMiddlewares = (app: Application) => {
   app.use(rateLimit({
     windowMs: 15 * 60 * 1000,
     limit: 200,
-    handler: (_, res) => {
-      sendError(res, 429, 'Too many requests, please try again later.');
-    }
+    handler: (_, res) => sendError(res, 429, 'Too many requests, please try again later.')
   }));
 
-  // JSON body parser middleware with a limit of 10mb
-  app.use(express.json({ limit: '10mb' }));
+  // Helmet middleware to secure Express apps by setting various HTTP headers
+  app.use(helmet());
+
+  // Body parser middleware to parse incoming request bodies
+  app.use(express.json({ limit: '2mb' }));
+  app.use(express.urlencoded({ limit: '2mb', extended: true }));
 
   // Prevent the favicon.ico request from browsers
   app.get('/favicon.ico', (_, res) => {
@@ -33,8 +35,5 @@ export const setupMiddlewares = (app: Application) => {
     methods: process.env.CORS_METHODS || 'GET,POST,PATCH,DELETE,OPTIONS',
     allowedHeaders: process.env.CORS_ALLOWED_HEADERS || 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   }));
-
-  // Helmet middleware to secure Express apps by setting various HTTP headers
-  app.use(helmet());
 
 };
