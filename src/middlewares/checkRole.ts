@@ -32,7 +32,8 @@ export const checkRole = (allowedRoles: string[]) => {
       if ( !allowedRoles.includes(userRole) )
         return sendError(res, 403, 'Access denied');
 
-      // If everything is fine, call the next middleware
+      // If everything is fine, call the next middleware and attach the user to the request
+      req.user = user;
       next();
     } catch ( error ) {
       return sendError(res, 500, `Error checking user role : ${error}`);

@@ -1,3 +1,4 @@
+import { Request, Response } from 'express';
 import { Router } from 'express';
 import { checkRole } from '../middlewares/checkRole';
 import { sendSuccess } from '../middlewares/httpResponses';
@@ -14,15 +15,15 @@ const router = Router();
  *     description: This route is only accessible to users with the admin role.
  *     responses:
  *       '200':
- *         description: Hello Admin!
+ *         user: All the user data
  *       '403':
  *         description: Forbidden. You do not have permission to access this resource.
  */
 router.get(
   '/admin-only',
   checkRole([Roles.ADMIN]),
-  (_, res) => {
-    sendSuccess(res, 200, 'Hello Admin!', {});
+  (req: Request, res: Response) => {
+    sendSuccess(res, 200, 'Hello Admin!', { user: req.user });
   }
 );
 
@@ -35,15 +36,15 @@ router.get(
  *     description: This route is accessible to users with either the user or admin role.
  *     responses:
  *       '200':
- *         description: Hello User or Admin!
+ *         user: All the user data
  *       '403':
  *         description: Forbidden. You do not have permission to access this resource.
  */
 router.get(
   '/user-or-admin',
   checkRole([Roles.USER, Roles.ADMIN]),
-  (_, res) => {
-    sendSuccess(res, 200, 'Hello User or Admin!', {});
+  (req: Request, res: Response) => {
+    sendSuccess(res, 200, 'Hello User or Admin!', { user: req.user });
   }
 );
 

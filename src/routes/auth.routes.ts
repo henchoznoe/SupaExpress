@@ -1,7 +1,9 @@
 import { Router } from 'express';
-import { login, refreshToken, register } from '../controllers/auth.controller';
+import { getMe, login, refreshToken, register } from '../controllers/auth.controller';
 import { authSchema, refreshTokenSchema } from '../validators/auth.schema';
 import { validateFields } from '../middlewares/fieldsValidation';
+import { Roles } from '../types/role';
+import { checkRole } from '../middlewares/checkRole';
 
 const router = Router();
 
@@ -117,6 +119,25 @@ router.post(
   '/refresh-token',
   validateFields(refreshTokenSchema),
   refreshToken
+);
+
+/**
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     summary: Get Current User Info
+ *     tags: [Auth]
+ *     description: Retrieve the current user's information.
+ *     responses:
+ *       '200':
+ *         description: User info retrieved successfully.
+ *       '401':
+ *         description: Unauthorized. Invalid or missing token.
+ */
+router.get(
+  '/me',
+  checkRole([Roles.USER]),
+  getMe
 );
 
 export default router;

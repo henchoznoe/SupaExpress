@@ -95,3 +95,27 @@ export const refreshToken = async (req: Request, res: Response) => {
     return sendError(res, 500, `Failed to refresh token: ${error}`);
   }
 };
+
+/**
+ * Controller to handle user information retrieval.
+ * It retrieves the user information from the request object,
+ * and sends a success response with the user data.
+ * If an error occurs, it sends an error response with the error message.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ */
+export const getMe = async (req: Request, res: Response) => {
+  try {
+    const { user } = req;
+    if ( !user ) return sendError(res, 401, 'User not found');
+    return sendSuccess(res, 200, 'User retrieved successfully', {
+      user: {
+        id: user.id,
+        email: user.email
+      }
+    });
+  } catch ( error ) {
+    return sendError(res, 500, `Failed to get user: ${error}`);
+  }
+};
