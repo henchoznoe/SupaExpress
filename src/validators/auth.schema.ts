@@ -13,7 +13,13 @@ const passwordSchema = z.string({ required_error: 'Password is required.' })
   .regex(/[0-9]/, 'Password must contain at least one digit.')
   .regex(/[\W_]/, 'Password must contain at least one special character.');
 
+const tokenSchema = z.string({ required_error: 'Token is required.' });
+
 export const authSchema = z.object({
   email: emailSchema,
   password: passwordSchema
+});
+
+export const refreshTokenSchema = z.object({
+  refresh_token: tokenSchema
 });

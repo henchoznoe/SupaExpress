@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { login, register } from '../controllers/auth.controller';
-import { authSchema } from '../validators/auth.schema';
+import { login, refreshToken, register } from '../controllers/auth.controller';
+import { authSchema, refreshTokenSchema } from '../validators/auth.schema';
 import { validateFields } from '../middlewares/fieldsValidation';
 
 const router = Router();
@@ -52,7 +52,7 @@ router.post(
  *   post:
  *     summary: User Registration
  *     tags: [Auth]
- *     description: Register a new user using Supabase Auth. Sends a confirmation email if enabled.
+ *     description: Register a new user using Supabase Auth. Sends a confirmation email.
  *     requestBody:
  *       required: true
  *       content:
@@ -85,6 +85,38 @@ router.post(
   '/register',
   validateFields(authSchema),
   register
+);
+
+/**
+ * @swagger
+ * /api/auth/refresh-token:
+ *   post:
+ *     summary: Refresh Access Token
+ *     tags: [Auth]
+ *     description: Refresh the access token using the refresh token.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refresh_token
+ *             properties:
+ *               refresh_token:
+ *                 type: string
+ *                 description: The refresh token to obtain a new access token.
+ *                 example: your_refresh_token_here
+ *     responses:
+ *       '200':
+ *         description: Token refreshed successfully. Returns a new access token.
+ *       '400':
+ *         description: Invalid refresh token.
+ */
+router.post(
+  '/refresh-token',
+  validateFields(refreshTokenSchema),
+  refreshToken
 );
 
 export default router;
