@@ -14,15 +14,15 @@ Built for scalability, speed, and simplicity — perfect for production-ready ba
 1. Clone the repository:
    ```bash
    git clone https://github.com/henchoznoe/SupaExpress.git
-    ```
+   ```
 2. Go to the project directory:
    ```bash
    cd SupaExpress
-    ```
+   ```
 3. Install dependencies:
    ```bash
     npm install
-    ```
+   ```
 4. Create a [supabase](https://supabase.com/) project and copy the environement variables.
 5. Rename `.env.example` to `.env` and fill in the required environment variables.
 6. Run the development server:
@@ -40,7 +40,7 @@ Built for scalability, speed, and simplicity — perfect for production-ready ba
 4. Push your project to your GitHub repository.
 5. On [vercel.com](https://vercel.com), create a new project → Import your repository.
 6. Configure :
-    - **Framework Preset**: `Other`
-    - **Root Directory**: `./`"
+   - **Framework Preset**: `Other`
+   - **Root Directory**: `./`"
 7. Paste in `Environment Variables` all your file `.env.production`.
 8. Deploy!

@@ -1,5 +1,4 @@
-import { Request, Response } from 'express';
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { checkRole } from '../middlewares/checkRole';
 import { sendSuccess } from '../middlewares/httpResponses';
 import { Roles } from '../types/role';

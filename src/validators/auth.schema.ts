@@ -1,10 +1,12 @@
 import { z } from 'zod';
 
-const emailSchema = z.string({ required_error: 'Email is required.' })
+const emailSchema = z
+  .string({ required_error: 'Email is required.' })
   .nonempty('Email cannot be empty.')
   .email('Bad email format.');
 
-const passwordSchema = z.string({ required_error: 'Password is required.' })
+const passwordSchema = z
+  .string({ required_error: 'Password is required.' })
   .nonempty('Password cannot be empty.')
   .min(8, 'Password must be at least 8 characters long.')
   .max(32, 'Password must be at most 32 characters long.')

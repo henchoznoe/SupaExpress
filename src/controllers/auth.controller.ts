@@ -15,21 +15,27 @@ import { sendError, sendSuccess } from '../middlewares/httpResponses';
 export const register = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
-    const { data: user, error } = await supabase.auth.signUp({ email, password });
-    if ( error ) return sendError(res, 400, error.message);
-    const { error: adminError } = await supabaseAdmin.auth.admin.updateUserById(<string>user.user?.id, {
-      app_metadata: {
-        role: 'user',
-      },
+    const { data: user, error } = await supabase.auth.signUp({
+      email,
+      password
     });
-    if ( adminError ) return sendError(res, 500, adminError.message);
+    if (error) return sendError(res, 400, error.message);
+    const { error: adminError } = await supabaseAdmin.auth.admin.updateUserById(
+      <string>user.user?.id,
+      {
+        app_metadata: {
+          role: 'user'
+        }
+      }
+    );
+    if (adminError) return sendError(res, 500, adminError.message);
     return sendSuccess(res, 200, 'User registered successfully', {
       user: {
         id: user.user?.id,
-        email: user.user?.email,
+        email: user.user?.email
       }
     });
-  } catch ( error ) {
+  } catch (error) {
     return sendError(res, 500, `Failed to register user: ${error}`);
   }
 };
@@ -47,20 +53,23 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if ( error ) return sendError(res, 401, error.message);
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+    if (error) return sendError(res, 401, error.message);
     return sendSuccess(res, 200, 'Login successful', {
       user: {
         id: data.user?.id,
-        email: data.user?.email,
+        email: data.user?.email
       },
       session: {
         access_token: data.session?.access_token,
         expires_at: data.session?.expires_at,
-        refresh_token: data.session?.refresh_token,
+        refresh_token: data.session?.refresh_token
       }
     });
-  } catch ( error ) {
+  } catch (error) {
     return sendError(res, 500, `Failed to login user: ${error}`);
   }
 };
@@ -78,20 +87,22 @@ export const login = async (req: Request, res: Response) => {
 export const refreshToken = async (req: Request, res: Response) => {
   const { refresh_token } = req.body;
   try {
-    const { data, error } = await supabase.auth.refreshSession({ refresh_token });
-    if ( error ) return sendError(res, 401, error.message);
+    const { data, error } = await supabase.auth.refreshSession({
+      refresh_token
+    });
+    if (error) return sendError(res, 401, error.message);
     return sendSuccess(res, 200, 'Token refreshed successfully', {
       user: {
         id: data.user?.id,
-        email: data.user?.email,
+        email: data.user?.email
       },
       session: {
         access_token: data.session?.access_token,
         expires_at: data.session?.expires_at,
-        refresh_token: data.session?.refresh_token,
+        refresh_token: data.session?.refresh_token
       }
     });
-  } catch ( error ) {
+  } catch (error) {
     return sendError(res, 500, `Failed to refresh token: ${error}`);
   }
 };
@@ -108,14 +119,14 @@ export const refreshToken = async (req: Request, res: Response) => {
 export const getMe = async (req: Request, res: Response) => {
   try {
     const { user } = req;
-    if ( !user ) return sendError(res, 401, 'User not found');
+    if (!user) return sendError(res, 401, 'User not found');
     return sendSuccess(res, 200, 'User retrieved successfully', {
       user: {
         id: user.id,
         email: user.email
       }
     });
-  } catch ( error ) {
+  } catch (error) {
     return sendError(res, 500, `Failed to get user: ${error}`);
   }
 };

@@ -1,9 +1,14 @@
 import { Router } from 'express';
-import { getMe, login, refreshToken, register } from '../controllers/auth.controller';
-import { authSchema, refreshTokenSchema } from '../validators/auth.schema';
+import {
+  getMe,
+  login,
+  refreshToken,
+  register
+} from '../controllers/auth.controller';
+import { checkRole } from '../middlewares/checkRole';
 import { validateFields } from '../middlewares/fieldsValidation';
 import { Roles } from '../types/role';
-import { checkRole } from '../middlewares/checkRole';
+import { authSchema, refreshTokenSchema } from '../validators/auth.schema';
 
 const router = Router();
 
@@ -42,11 +47,7 @@ const router = Router();
  *       '500':
  *         description: Server error during authentication.
  */
-router.post(
-  '/login',
-  validateFields(authSchema),
-  login
-);
+router.post('/login', validateFields(authSchema), login);
 
 /**
  * @swagger
@@ -83,11 +84,7 @@ router.post(
  *       '500':
  *         description: Server error during registration.
  */
-router.post(
-  '/register',
-  validateFields(authSchema),
-  register
-);
+router.post('/register', validateFields(authSchema), register);
 
 /**
  * @swagger
@@ -115,11 +112,7 @@ router.post(
  *       '400':
  *         description: Invalid refresh token.
  */
-router.post(
-  '/refresh-token',
-  validateFields(refreshTokenSchema),
-  refreshToken
-);
+router.post('/refresh-token', validateFields(refreshTokenSchema), refreshToken);
 
 /**
  * @swagger
@@ -134,10 +127,6 @@ router.post(
  *       '401':
  *         description: Unauthorized. Invalid or missing token.
  */
-router.get(
-  '/me',
-  checkRole([Roles.USER]),
-  getMe
-);
+router.get('/me', checkRole([Roles.USER]), getMe);
 
 export default router;

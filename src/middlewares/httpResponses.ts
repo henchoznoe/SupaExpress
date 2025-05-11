@@ -11,8 +11,14 @@ import { ResponseType } from '../types/httpResponses';
  * @param {string} message - The message to include in the response.
  * @param {object} data - Data to include in the response.
  */
-const sendResponse = (res: Response, statusCode: number, success: boolean, message: string, data: object = {}): void => {
-  const response: ResponseType = { success, message, ...({ data }) };
+const sendResponse = (
+  res: Response,
+  statusCode: number,
+  success: boolean,
+  message: string,
+  data: object = {}
+): void => {
+  const response: ResponseType = { success, message, ...{ data } };
   res.status(statusCode).json(response);
 };
 
@@ -25,7 +31,12 @@ const sendResponse = (res: Response, statusCode: number, success: boolean, messa
  * @param {string} message - The success message to include in the response.
  * @param {object} data - Data to include in the response.
  */
-export const sendSuccess = (res: Response, statusCode: number, message: string, data: object): void => {
+export const sendSuccess = (
+  res: Response,
+  statusCode: number,
+  message: string,
+  data: object
+): void => {
   sendResponse(res, statusCode, true, message, data);
 };
 
@@ -37,6 +48,10 @@ export const sendSuccess = (res: Response, statusCode: number, message: string, 
  * @param {number} statusCode - The HTTP status code to send.
  * @param {string} message - The error message to include in the response.
  */
-export const sendError = (res: Response, statusCode: number, message: string): void => {
+export const sendError = (
+  res: Response,
+  statusCode: number,
+  message: string
+): void => {
   sendResponse(res, statusCode, false, message);
 };

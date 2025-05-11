@@ -9,7 +9,11 @@ import { sendError } from './httpResponses';
  * @param {Response} res - The response object.
  */
 export const routeNotFoundHandler = (req: Request, res: Response): void => {
-  return sendError(res, 404, `The route you are looking for [${req.path}] does not exist...`);
+  return sendError(
+    res,
+    404,
+    `The route you are looking for [${req.path}] does not exist...`
+  );
 };
 
 /**
@@ -21,6 +25,11 @@ export const routeNotFoundHandler = (req: Request, res: Response): void => {
  * @param {Response} res - The response object.
  * @param {NextFunction} _next - The next middleware function.
  */
-export const globalErrorHandler = (error: Error, _req: Request, res: Response, _next: NextFunction): void => {
+export const globalErrorHandler = (
+  error: Error,
+  _req: Request,
+  res: Response,
+  _next: NextFunction
+): void => {
   return sendError(res, 500, error.message || 'Internal Server Error');
 };

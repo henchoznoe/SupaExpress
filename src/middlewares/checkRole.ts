@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { sendError } from './httpResponses';
+import { NextFunction, Request, Response } from 'express';
 import { supabaseAdmin } from '../config/supabase';
+import { sendError } from './httpResponses';
 
 /**
  * Middleware to check user role.
@@ -12,30 +12,31 @@ export const checkRole = (allowedRoles: string[]) => {
     try {
       // Check if the request has an authorization header
       const authHeader = req.headers.authorization;
-      if ( !authHeader )
+      if (!authHeader)
         return sendError(res, 401, 'Missing authorization header');
 
       // Split the header to get the token
       const token = authHeader.split(' ')[1];
-      if ( !token )
-        return sendError(res, 401, 'Missing token');
+      if (!token) return sendError(res, 401, 'Missing token');
 
       // Get the user from Supabase using the token
-      const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
-      if ( error || !user )
+      const {
+        data: { user },
+        error
+      } = await supabaseAdmin.auth.getUser(token);
+      if (error || !user)
         return sendError(res, 401, 'Invalid token or user not found');
 
       // Check if the user has a role and if it is in the allowed roles
       const userRole = user.app_metadata?.role || 'user';
-      if ( !userRole )
-        return sendError(res, 403, 'No role assigned to the user');
-      if ( !allowedRoles.includes(userRole) )
+      if (!userRole) return sendError(res, 403, 'No role assigned to the user');
+      if (!allowedRoles.includes(userRole))
         return sendError(res, 403, 'Access denied');
 
       // If everything is fine, call the next middleware and attach the user to the request
       req.user = user;
       next();
-    } catch ( error ) {
+    } catch (error) {
       return sendError(res, 500, `Error checking user role : ${error}`);
     }
   };

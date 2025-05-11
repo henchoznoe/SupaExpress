@@ -10,7 +10,7 @@ import { sendError } from './httpResponses';
 export const validateFields = (schema: ZodTypeAny) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const result = schema.safeParse(req.body);
-    if ( !result.success ) {
+    if (!result.success) {
       const errorMessage = result.error.errors[0]?.message || 'Invalid input';
       return sendError(res, 400, errorMessage);
     }

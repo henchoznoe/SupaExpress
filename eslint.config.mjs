@@ -1,8 +1,7 @@
 import js from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import { defineConfig } from 'eslint/config';
-
 
 export default defineConfig([
   {
@@ -15,12 +14,15 @@ export default defineConfig([
       globals: globals.node
     },
     rules: {
-      'semi': ['error', 'always'],
-      'quotes': ['error', 'single'],
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/no-explicit-any': 'warn',
+      semi: ['error', 'always'],
+      quotes: ['error', 'single'],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_' }
+      ],
+      '@typescript-eslint/no-explicit-any': 'warn'
     },
     extends: ['js/recommended']
   },
-  tseslint.configs.recommended,
+  tseslint.configs.recommended
 ]);

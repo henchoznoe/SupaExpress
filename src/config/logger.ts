@@ -1,6 +1,6 @@
 import { Application, Request, Response } from 'express';
-import { createLogger, format, transports } from 'winston';
 import morgan from 'morgan';
+import { createLogger, format, transports } from 'winston';
 
 /**
  * Setup logger middleware for the application.
@@ -9,17 +9,21 @@ import morgan from 'morgan';
  */
 export const setupLogger = (app: Application) => {
   morgan.token('statusName', (_: Request, res: Response) => {
-    return `${res.statusCode} - ${httpStatusDescriptions[res.statusCode] || 'Unknown Status'}`;
+    return `${res.statusCode} - ${
+      httpStatusDescriptions[res.statusCode] || 'Unknown Status'
+    }`;
   });
   morgan.token('clientIp', (req: Request) => req.ip);
-  app.use(morgan(':method :url [:statusName] :clientIp', {
-    stream: {
-      write: (message: string) => {
-        const statusCode = parseInt(message.split('[')[1].split(' - ')[0]);
-        log[statusCode < 400 ? 'info' : 'error'](message.trim());
+  app.use(
+    morgan(':method :url [:statusName] :clientIp', {
+      stream: {
+        write: (message: string) => {
+          const statusCode = parseInt(message.split('[')[1].split(' - ')[0]);
+          log[statusCode < 400 ? 'info' : 'error'](message.trim());
+        }
       }
-    }
-  }));
+    })
+  );
 };
 
 const { combine, timestamp, printf, colorize } = format;
@@ -85,7 +89,7 @@ const httpStatusDescriptions: { [key: number]: string } = {
   415: 'Unsupported Media Type',
   416: 'Range Not Satisfiable',
   417: 'Expectation Failed',
-  418: 'I\'m a teapot',
+  418: "I'm a teapot",
   421: 'Misdirected Request',
   422: 'Unprocessable Entity',
   423: 'Locked',
